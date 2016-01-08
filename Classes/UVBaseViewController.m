@@ -159,8 +159,15 @@
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-
-    _exitButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel", @"UserVoice", [UserVoice bundle], nil)
+    
+    // Changed by DR on 7 Jan 2016 so we can show specific articles directly
+    // This originally said "Cancel", but this conflicts with the Close button that appears
+    // when loading the article and when showing the index of available articles.
+    NSString *buttonTitle = @"Cancel";
+    if (self.pageOpenedDirectly) {
+        buttonTitle = @"Close";
+    }
+    _exitButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTableInBundle(buttonTitle, @"UserVoice", [UserVoice bundle], nil)
                                                    style:UIBarButtonItemStylePlain
                                                   target:self
                                                   action:@selector(dismiss)];

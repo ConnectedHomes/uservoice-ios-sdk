@@ -21,6 +21,20 @@
     UIButton *_no;
 }
 
+// Added by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
+- (id)initWithArticle:(UVArticle *)theArticle helpfulPrompt:(NSString *)theHelpfulPrompt returnMessage:(NSString *)theReturnMessage {
+    if (self = [super init]) {
+        self.article = theArticle;
+        self.helpfulPrompt = theHelpfulPrompt;
+        self.returnMessage = theReturnMessage;
+        self.pageOpenedDirectly = YES;
+        [UVBabayaga track:VIEW_ARTICLE id:theArticle.articleId];
+    }
+    return self;
+}
+
 - (void)loadView {
     [super loadView];
     [UVBabayaga track:VIEW_ARTICLE id:_article.articleId];

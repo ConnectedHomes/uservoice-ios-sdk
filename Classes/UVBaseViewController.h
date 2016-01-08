@@ -28,6 +28,7 @@
 }
 
 @property (nonatomic, assign) BOOL firstController;
+@property (nonatomic, assign) BOOL pageOpenedDirectly;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) UIBarButtonItem *exitButton;
 @property (nonatomic, retain) UVSigninManager *signinManager;

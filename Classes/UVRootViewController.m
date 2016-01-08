@@ -22,6 +22,15 @@
 #import "UVContactViewController.h"
 #import "UVBabayaga.h"
 
+// File modifed by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
+#import "UVArticle.h"
+#import "UVArticleViewController.h"
+#import "UVHelpTopic.h"
+#import "UVHelpTopicViewController.h"
+//
+
 @implementation UVRootViewController
 
 - (id)initWithViewToLoad:(NSString *)theViewToLoad {
@@ -46,20 +55,55 @@
         transition.type = kCATransitionFade;
         [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
         UVBaseViewController *next = nil;
-        if ([_viewToLoad isEqualToString:@"welcome"])
-            next = [UVWelcomeViewController new];
-        else if ([_viewToLoad isEqualToString:@"suggestions"])
-            next = [UVSuggestionListViewController new];
-        else if ([_viewToLoad isEqualToString:@"new_suggestion"])
-            next = [UVPostIdeaViewController new];
-        else if ([_viewToLoad isEqualToString:@"new_ticket"])
-            next = [UVContactViewController new];
-
-        next.firstController = YES;
-        [self.navigationController pushViewController:next animated:NO];
+        
+        NSInteger articleId = [self.viewToLoad integerValue];
+        if (articleId == 0) {
+            
+            if ([_viewToLoad isEqualToString:@"welcome"])
+                next = [UVWelcomeViewController new];
+            else if ([_viewToLoad isEqualToString:@"suggestions"])
+                next = [UVSuggestionListViewController new];
+            else if ([_viewToLoad isEqualToString:@"new_suggestion"])
+                next = [UVPostIdeaViewController new];
+            else if ([_viewToLoad isEqualToString:@"new_ticket"])
+                next = [UVContactViewController new];
+            
+            [self pushViewsAndAnimate:[NSArray arrayWithObject:next]];
+            
+        } else {
+            // Article ID is set, load specific article
+            [UVArticle getArticleWithId:articleId delegate:self];
+        }
     }
 }
 
+#pragma mark ===== Additions from PR135 so we can show specific articles directly
+
+- (void)pushViewsAndAnimate:(NSArray *)viewControllers {
+    CATransition* transition = [CATransition animation];
+    transition.duration = 0.3;
+    transition.type = kCATransitionFade;
+    [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
+    
+    BOOL first = TRUE;
+    
+    for(UVBaseViewController* viewController in viewControllers){
+        viewController.firstController = first;
+        first = FALSE;
+        [self.navigationController pushViewController:viewController animated:NO];
+    }
+}
+
+- (void)didRetrieveIndividualArticle:(UVArticle *)article {
+    
+    UVArticleViewController *articleViewController = [[UVArticleViewController alloc] initWithArticle:article helpfulPrompt:nil returnMessage:nil];
+    if (articleViewController) {
+        [self pushViewsAndAnimate:@[articleViewController]];
+    } else {
+        UIViewController *welcomeViewController = [[UVWelcomeViewController alloc] init];
+        [self pushViewsAndAnimate:@[welcomeViewController]];
+    }
+}
 
 #pragma mark ===== Basic View Methods =====
 

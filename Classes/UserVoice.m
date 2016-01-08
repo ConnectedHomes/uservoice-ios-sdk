@@ -137,6 +137,15 @@ static NSBundle *userVoiceBundle;
     [self presentUserVoiceForumForParentViewController:parentViewController];
 }
 
+// Added by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
++ (void)presentUserVoiceKnowledgeBaseArticleForParentViewController:(UIViewController *)parentViewController andArticleId:(NSInteger)articleId andConfig:(UVConfig *)config {
+    [self initialize:config];
+    UIViewController *viewController = [[UVRootViewController alloc] initWithViewToLoad:[NSString stringWithFormat:@"%@", @(articleId)]];
+    [self presentUserVoiceController:viewController forParentViewController:parentViewController];
+}
+
 + (void)setExternalId:(NSString *)identifier forScope:(NSString *)scope {
     [[UVSession currentSession] setExternalId:identifier forScope:scope];
 }

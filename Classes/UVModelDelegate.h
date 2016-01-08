@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 UserVoice Inc. All rights reserved.
 //
 
-@class UVRequestContext, UVClientConfig, UVSuggestion, UVComment, UVForum, UVAccessToken, UVTicket, UVHelpTopic, UVRequestToken, UVUser;
+@class UVRequestContext, UVClientConfig, UVSuggestion, UVComment, UVForum, UVAccessToken, UVTicket, UVHelpTopic, UVRequestToken, UVUser, UVArticle;
 
 @protocol UVModelDelegate <NSObject>
 @optional
@@ -34,5 +34,10 @@
 - (void)didSendForgotPassword:(UVUser *)user;
 - (void)didIdentifyUser:(UVUser *)user;
 - (void)didCreateSuggestion:(UVSuggestion *)user;
+
+// Added by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
+- (void)didRetrieveIndividualArticle:(UVArticle *)article;
 
 @end

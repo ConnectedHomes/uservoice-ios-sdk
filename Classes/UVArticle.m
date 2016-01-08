@@ -17,6 +17,18 @@
 
 @implementation UVArticle
 
+// Added by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
++ (id)getArticleWithId:(NSInteger)articleId delegate:(id<UVModelDelegate>)delegate {
+    NSString *path = [self apiPath:[NSString stringWithFormat:@"/articles/%@.json", @(articleId)]];
+    return [self getPath:path
+              withParams:nil
+                  target:delegate
+                selector:@selector(didRetrieveIndividualArticle:)
+                 rootKey:@"article"];
+}
+
 + (id)getArticlesWithTopicId:(NSInteger)topicId page:(NSInteger)page delegate:(id<UVModelDelegate>)delegate {
     NSString *path = [self apiPath:[NSString stringWithFormat:@"/topics/%d/articles.json", (int)topicId]];
     NSDictionary *params = @{ @"sort" : @"ordered", @"page" : [NSString stringWithFormat:@"%d", (int)page], @"filter" : @"published" };
@@ -67,6 +79,11 @@
         _articleId = [(NSNumber *)[self objectOrNilForDict:dict key:@"id"] integerValue];
         _topicName = [UVUtils decodeHTMLEntities:[[self objectOrNilForDict:dict key:@"topic"] objectForKey:@"name"]];
         _weight = [(NSNumber *)[self objectOrNilForDict:dict key:@"normalized_weight"] integerValue];
+        
+        NSDictionary *topic = [self objectOrNilForDict:dict key:@"topic"];
+        if (topic != nil) {
+            self.topicId = [[topic objectForKey:@"id"] integerValue];
+        }
     }
     return self;
 }

@@ -19,6 +19,13 @@
 // analytics. You can call it again later if you need to change the config.
 + (void)initialize:(UVConfig *)config;
 
+//
+// Added by DR on 7 Jan 2016 so we can show specific articles directly
+// Based on PR 138 by mronkko from here:
+// https://github.com/uservoice/uservoice-ios-sdk/pull/138/files
+//
++ (void)presentUserVoiceKnowledgeBaseArticleForParentViewController:(UIViewController *)parentViewController andArticleId:(NSInteger)articleId andConfig:(UVConfig *)config;
+
 // Modally present the UserVoice portal view
 + (void)presentUserVoiceInterfaceForParentViewController:(UIViewController *)parentViewController;
 
