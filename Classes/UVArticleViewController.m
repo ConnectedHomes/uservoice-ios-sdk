@@ -89,6 +89,8 @@
     [self configureView:footer
                subviews:NSDictionaryOfVariableBindings(border, label, yes, no)
             constraints:constraints];
+    
+    footer.accessibilityElements = @[label, yes, no];
 
     [self configureView:self.view
                subviews:NSDictionaryOfVariableBindings(_webView, footer)
